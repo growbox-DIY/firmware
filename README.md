@@ -59,7 +59,7 @@ and a macOS desktop widget in `growbox-widget-macos`.
 | SD card (SPI)             | CS 4, SCK 27, MOSI 26, MISO 25  |
 | Display button + its LED  | GPIO 15, GPIO 16                |
 
-Pins and dimmer calibration live in `App/esp_config.py`.
+Pins and dimmer calibration live in `src/esp_config.py`.
 
 ### Mains (230 V)
 
@@ -77,7 +77,7 @@ The relays switch the phase (L) of the lamp and the fan; the fan goes through th
    esptool.py --chip esp32 write_flash -z 0x1000 ESP32_GENERIC-20251209-v1.27.0.bin
    ```
 
-2. Create `App/secrets.py` with your WiFi credentials. The file is not
+2. Create `src/secrets.py` with your WiFi credentials. The file is not
    committed.
 
    ```python
@@ -97,7 +97,7 @@ The relays switch the phase (L) of the lamp and the fan; the fan goes through th
                ("your-extender", "its-password"))
    ```
 
-3. Create `App/api_token.py` from `App/api_token_example.py` with your
+3. Create `src/api_token.py` from `src/api_token_example.py` with your
    own long random token. Every API call needs it, and the app, the
    widgets and the monitor use the same one. It is not committed either,
    but unlike `secrets.py` it goes to the board with the rest of the app.
@@ -105,7 +105,7 @@ The relays switch the phase (L) of the lamp and the fan; the fan goes through th
 4. Copy the app to the board:
 
    ```bash
-   mpremote connect /dev/cu.usbserial-0001 cp App/*.py :
+   mpremote connect /dev/cu.usbserial-0001 cp src/*.py :
    ```
 
    The first `./deploy.py` afterwards replaces the sources with
@@ -117,7 +117,7 @@ does not touch them, so a broken update can never lock you out.
 ## Updates over WiFi
 
 ```bash
-./deploy.py              # send changed files from App/, restart, wait for confirm
+./deploy.py              # send changed files from src/, restart, wait for confirm
 ./deploy.py --dry-run    # only show what changed
 ./deploy.py sensor.py    # send selected files even if unchanged
 ```
@@ -140,7 +140,7 @@ How an update works:
    previous files.
 
 `ESP_URL` changes the address (default `http://192.168.18.85`). The token
-is read from `App/api_token.py`.
+is read from `src/api_token.py`.
 
 ## HTTP API
 
@@ -179,7 +179,7 @@ requests used to exhaust it.
 ## Layout
 
 ```
-App/            firmware (copied to the board root)
+src/            firmware (copied to the board root)
   app.py        startup, task supervisor, watchdog
   server.py     HTTP API, relays, schedule
   fan_auto.py   fan speed from temperature (Manual and flowering by day)

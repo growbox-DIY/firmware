@@ -1,7 +1,7 @@
 # WiFi credentials - only on the board and your machine
-App/secrets.py
+src/secrets.py
 # API token - only on the board and your machine
-App/api_token.py
+src/api_token.py
 
 __pycache__/
 .venv/

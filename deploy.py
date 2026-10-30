@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-ESP update over WiFi (OTA, see App/ota.py).
+ESP update over WiFi (OTA, see src/ota.py).
 
-    ./deploy.py              # send changed files from App/ and restart the ESP
+    ./deploy.py              # send changed files from src/ and restart the ESP
     ./deploy.py --dry-run    # only show what changed
     ./deploy.py sensor.py    # send selected files (even if unchanged)
 
@@ -11,10 +11,10 @@ the ESP): the ESP does not compile sources at boot and keeps more RAM.
     pipx install mpy-cross==1.27.0.post2
 
 Address: --url or the ESP_URL variable (default http://192.168.18.85).
-Token: read from App/api_token.py (API_TOKEN).
+Token: read from src/api_token.py (API_TOKEN).
 
 main.py, boot.py and secrets.py do not go via OTA - cable only:
-    mpremote connect /dev/cu.usbserial-0001 cp App/main.py :main.py
+    mpremote connect /dev/cu.usbserial-0001 cp src/main.py :main.py
 """
 
 import argparse
@@ -31,7 +31,7 @@ import urllib.parse
 import urllib.request
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-APP_DIR = os.path.join(ROOT, "App")
+APP_DIR = os.path.join(ROOT, "src")
 
 PROTECTED = ("main.py", "boot.py", "secrets.py")
 DEFAULT_URL = "http://192.168.18.85"
@@ -59,7 +59,7 @@ def read_token():
         match = re.search(r'^API_TOKEN\s*=\s*"([^"]+)"', f.read(), re.M)
 
     if not match:
-        sys.exit("API_TOKEN not found in App/api_token.py (copy api_token_example.py)")
+        sys.exit("API_TOKEN not found in src/api_token.py (copy api_token_example.py)")
 
     return match.group(1)
 
@@ -131,7 +131,7 @@ def check_mpy_cross():
 
 
 def local_files():
-    """{"X.mpy": bytes} - modules from App/ compiled with mpy-cross."""
+    """{"X.mpy": bytes} - modules from src/ compiled with mpy-cross."""
     files = {}
 
     with tempfile.TemporaryDirectory() as tmp:
@@ -213,7 +213,7 @@ def main():
         unknown = [n for n, w in zip(args.files, wanted) if w not in files]
 
         if unknown:
-            sys.exit("No such files in App/ (or they are protected): %s"
+            sys.exit("No such files in src/ (or they are protected): %s"
                      % ", ".join(unknown))
 
         changed = wanted
