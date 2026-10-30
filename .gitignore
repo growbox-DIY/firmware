@@ -1,0 +1,13 @@
+# WiFi credentials - only on the board and your machine
+App/secrets.py
+# API token - only on the board and your machine
+App/api_token.py
+
+__pycache__/
+.venv/
+.idea/
+.DS_Store
+App.zip
+
+# MicroPython image - download from micropython.org
+*.bin
